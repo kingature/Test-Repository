@@ -1,0 +1,258 @@
+Tab - list styles
+
+-= No Teams =-
+
+Name -> length = 1
+
+Name (Tick) -> length = 2
+Name [Tag]
+
+Name (Tick) [Tag] -> length = 3
+
+-= Teams =-
+
+Team | Name -> length = 3
+
+Team | Name (Tick) -> length = 4
+Team | Name [Tag]
+
+Team | Name (Tick) [Tag] -> length = 5
+
+------------------------------------------------------------------------------------------------------------------------
+
+String header = removeColorCodes(name).trim();
+String[] tagParts = header.split("\\s+");
+String[] tagParts_colored = name.split("\\s+");
+
+String team = "empty", clan = "empty";
+boolean party = false, spectator = false;
+
+if (header.contains("|") {
+    //player is in a team
+    team = tagParts[0];
+
+    if (tagParts.length == 4) {
+        String suffix = tagParts[3];
+        if (suffix.contains("[") && suffix.contains("]")) {
+            if (suffix.contains(Chat.DARK_PURPLE)) {
+                party = true;
+            } else clan = suffix.substring(1, suffix.length() - 1);
+        }
+    }
+
+    if (tagParts.length == 5) {
+        String suffix = tagParts[4];
+        if (suffix.contains(Chat.DARK_PURPLE)) {
+            party = true;
+        } else clan = suffix.substring(1, suffix.length() - 1);
+    }
+} else {
+    //player is not in a team
+    if (tagParts.length == 1) {
+        String n = tagParts_colored[0];
+        if (n.startsWith(Chat.GREY)) {
+            spectator = true;
+        }
+    }
+
+    if (tagPart.length == 2) {
+        String suffix = tagParts[1];
+        if (suffix.contains("[") && suffix.contains("]")) {
+            party = true;
+        } else else clan = suffix.substring(1, suffix.length() - 1);
+
+        String n = tagParts_colored[0];
+        if (n.startsWith(Chat.GREY)) {
+            spectator = true;
+        }
+    }
+
+    if (tagParts.length == 3) {
+        String suffix = tagParts[2];
+        if (suffix.contains(Chat.DARK_PURPLE)) {
+            party = true;
+        } else clan = suffix.substring(1, suffix.length() - 1);
+    }
+
+    String n = tagParts_colored[0];
+    if (n.startsWith(Chat.GREY)) {
+        spectator = true;
+    }
+}
+------------------------------------------------------------------------------------------------------------------------
+String header = removeColorCodes(name).trim();
+String[] tagParts = header.split("\\s+");
+String[] tagParts_colored = name.split("\\s+");
+
+String team = "empty", clan = "empty";
+boolean party = false, spectator = false;
+
+if (header.contains("|")) {
+    team = tagParts[0];
+} else if (tagParts_colored[0].contains(Chat.GREY)) {
+    spectator = true;
+}
+
+if (header.contains("[") && header.contains("]")) {
+    String tag = tagParts[tagParts.length - 1];
+    int start = tag.indexOf("[");
+    int end = tag.indexOf("]");
+    String tag_clean = tag.substring(start + 1, end);
+    if (tag_clean.equals("Party") {
+        party = true;
+    } else clan = tag_clean;
+}
+
+StatsPlayer pl = new StatsPlayer();
+
+pl.setTeam = team;
+pl.setClan = clan;
+pl.setParty = party;
+pl.setSpectator = spectator;
+------------------------------------------------------------------------------------------------------------------------
+Lists of Players
+
+I just want a single list of players.
+
+This list should only contain the players that are on my server right now.
+When a player leaves the server, he should be removed from the list.
+There are two ways of getting such a list.
+    - from the tab list
+    - from Minecraft itself
+
+Tab list - version
+
+Whenever the tab list renders a player, get all its information and add him to a list.
+
+------------------------------------------------------------------------------------------------------------------------
+No matter if a command only consists out of one argument or more, its base name should be the first argument only.
+
+The command handler then checks if a message begins with a command.
+If it does, execute the command.
+
+In the execute method then check for its validation.
+
+What should the interpreter be able to do?
+
+The basic task of the interpreter is just to check whether a message is a valid command.
+If it is, then return an array with the command and the parameter.
+
+- it should both accept commands with and without parameters
+
+First idea:
+.blacklist add:remove:show player:clan:team subject
+
+.blacklist add:remove:show
+
+    add player:clan
+    remove player:clan
+    show
+        player subject
+        clan subject
+
+class Dependency {
+    String key;
+    Dependency[] children;
+
+    Dependency(String key, Dependency[] children) {
+        this.key = key;
+        this.children = children;
+    }
+}
+
+Dependency d = new Dependency(".blacklist", new Dependency[]{});
+
+------------------------------------------------------------------------------------------------------------------------
+I have one list exactly, where all the players are saved that are currently on the same server as I am.
+Therefore I need to add new players as they are joining and remove players which already left the game again.
+I can add do that by simply calling an update event on the this list.
+
+But what can I do with it? First of all, this list shouldn't just store the player's name but rather store all his
+information. This information can be gathered by extracting the information of player from the tab list and then
+updating these information.
+
+In theory, this list and the tab list should have the same players.
+Now I have a list, which holds all the information about the player.
+
+The StatsDisplay class provides which players are in this list and NewTabList provides the player's information.
+
+What about the player's statistics?
+
+Whenever the is up for checking stats, go through the list and search for players which's stats weren't checked yet
+(simply by introducing another variable).
+While a player's statistics weren't, mark them as processing, if they are checked but not extracted from the chat, mark
+them as hidden /* This can be reworked later */ as the extractor can't detect whether a player's stats are hidden, and
+if they are a number, simply show them.
+------------------------------------------------------------------------------------------------------------------------
+I have three methods. One for blacklisted players, one for blacklisted Clans and one for checking if the max. KD exceeded.
+------------------------------------------------------------------------------------------------------------------------
+Mojang API
+
+I need a method which takes a (low key) string and returns the correct spelling of it. When the input couldn't be found,
+return null.
+
+When I add a player, save its name and its UUID. When you start Minecraft, go through each of the UUIDs and check if
+their corresponding user names are up to date. If not, update them.
+
+
+
+As long as I don't press tab, the the leave - stuff is called
+This is because as long as I don't press it, the player is null and so its spectator mode is false.
+But when I press tab, spectator is set to true, because the name ends (for some reason) with grey.
+
+------------------------------------------------------------------------------------------------------------------------
+Ideas on how to sort
+
+Priority: - Clans
+          - Teams
+          - Rest
+
+------------------------------------------------------------------------------------------------------------------------
+How to make the blacklist command more efficient
+
+- multi thread the Mojang API so it runs independent on Minecraft
+
+Player:
+    - when adding a player, add him the a buffer first. This buffer is checked in the same way as the regular list.
+      We do this so you can blacklist a player quickly. The buffer later is checked (on en extra thread) and then the
+      messages will show up in chat (e.g. successful, misspelled, nicked). All the successful players are then added to
+      the main list.
+
+    - When a player in the buffer was found, don't use the spelling from the buffer but rather from the tab list
+
+    - when removing a player, just check if the String is in the main list (I assume a player won't remove a player
+      instantly after he just added him -> I don't need to check the buffer). If it is, take the spelling from the list,
+      if not take the spelling from the input
+
+Clans:
+    - When adding a clan, add him to the main list. Show its user spelling in chat. If you encounter a clan that is
+      blacklisted, print the player clan (correct spelling) in chat and use it to override the one in the main list, if
+      it differs.
+------------------------------------------------------------------------------------------------------------------------
+        /* Current size of the chatBuffer */
+        int chatBufferSize = chatBuffer.size();
+
+        /* If there is a multiple of ten elements in the list (a full ChatBlock), convert the chatBuffer into a ChatBlock */
+        if (chatBufferSize != 0 && chatBufferSize % 10 == 0) {
+            /* Get the player name of the new ChatBlock */
+            //String playerName = chatBuffer.get(0).split("\\s+")[3];
+
+            /* Initialize the new ChatBlock */
+            ChatBlock newBlock = new ChatBlock("");
+
+            /* Go through the first ten elements of the chatBuffer and add them to the ChatBlock */
+            for (int i = 0; i < 10; i++) {
+                newBlock.add(chatBuffer.get(i));
+            }
+
+            newBlock.print();
+            Chat.msgClient("Buffer size: " + Chat.orange(chatBufferSize + ""), Chat.GREEN);
+
+            /* Delete the first ten elements of the chatBuffer */
+            chatBuffer.subList(0, 10).clear();
+        }
+------------------------------------------------------------------------------------------------------------------------
+I have another list of players. This list resets when connecting to a new server.
+Whenever the player writes '/stats <Player>' this player is then added to the list.
+After he was added his 'statsRequested' - boolean gets set to true. Whenever this boolean is true, check of there is a
+ChatBlock with his name. If yes, print it and set delete the player again.

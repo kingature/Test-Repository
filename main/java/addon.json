@@ -1,0 +1,5 @@
+{
+  "uuid": "%uuid%",
+  "name": "StatsDisplay",
+  "mainClass": "statsdisplay.main.StatsDisplay"
+}

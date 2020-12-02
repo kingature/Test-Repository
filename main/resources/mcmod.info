@@ -1,0 +1,16 @@
+[
+{
+  "modid": "statsdisplay",
+  "name": "StatsDisplay",
+  "description": "Shows the statistics in BedWars on GommeHD.net",
+  "version": "${1.3}",
+  "mcversion": "${1.8.9}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["ature"],
+  "credits": "DreckAufDemBild",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
